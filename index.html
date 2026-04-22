@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>האתר הראשון שלי</title>
+  <style>
+    :root {
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 60px;
+      background-color: #f0f4ff;
+    }
+
+    /* --- כניסת הכותרת בטעינת הדף --- */
+    h1 {
+      color: #3a3a8c;
+      font-size: 48px;
+      animation: כניסה-מלמעלה 0.7s var(--ease-out) both;
+    }
+
+    /* --- כניסת הכפתור אחרי הכותרת --- */
+    button {
+      margin-top: 20px;
+      padding: 14px 32px;
+      font-size: 18px;
+      background-color: #5c6bc0;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+      animation: כניסה-מלמטה 0.6s var(--ease-out) 0.3s both;
+    }
+
+    /* הגדלה עדינה + צל בריחוף */
+    button:hover {
+      background-color: #3a3a8c;
+      transform: scale(1.04);
+      box-shadow: 0 6px 20px rgba(58, 58, 140, 0.35);
+    }
+
+    /* לחיצה — אפקט כיווץ קצר */
+    button:active {
+      transform: scale(0.96);
+    }
+
+    /* --- אפקט גל (ripple) בלחיצה --- */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.45);
+      transform: scale(0);
+      animation: גל 0.5s linear;
+      pointer-events: none;
+    }
+
+    /* --- הודעת ההצלחה --- */
+    #הודעה {
+      margin-top: 30px;
+      font-size: 22px;
+      color: #2e7d32;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+    }
+
+    #הודעה.גלוי {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* --- הגדרת אנימציות --- */
+    @keyframes כניסה-מלמעלה {
+      from { opacity: 0; transform: translateY(-30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes כניסה-מלמטה {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes גל {
+      to { transform: scale(4); opacity: 0; }
+    }
+
+    /* --- נגישות: כיבוי אנימציות למי שמעדיף --- */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>שלום עולם</h1>
+
+  <button onclick="הצגהודעה(event)">לחץ עליי!</button>
+
+  <p id="הודעה">🎉 כל הכבוד! הצלחת ללחוץ על הכפתור!</p>
+
+  <script>
+    function הצגהודעה(event) {
+      // אפקט גל — מחשב מיקום הלחיצה בתוך הכפתור
+      const btn = event.currentTarget;
+      const circle = document.createElement("span");
+      const diameter = Math.max(btn.clientWidth, btn.clientHeight);
+      const rect = btn.getBoundingClientRect();
+
+      circle.classList.add("ripple");
+      circle.style.width = circle.style.height = diameter + "px";
+      circle.style.left = (event.clientX - rect.left - diameter / 2) + "px";
+      circle.style.top  = (event.clientY - rect.top  - diameter / 2) + "px";
+
+      btn.appendChild(circle);
+      circle.addEventListener("animationend", () => circle.remove());
+
+      // הצגת ההודעה עם אנימציה
+      document.getElementById("הודעה").classList.add("גלוי");
+    }
+  </script>
+
+</body>
+</html>
